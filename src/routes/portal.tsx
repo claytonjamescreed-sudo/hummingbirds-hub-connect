@@ -153,7 +153,7 @@ function Portal() {
                         <td key={i} className="px-2">
                           <button
                             disabled={i > 0 && !p.gates[i - 1]}
-                            onClick={() => setPayouts((all) => all.map((x) => x.id !== p.id ? x : { ...x, gates: x.gates.map((v, j) => j < i ? v : j === i ? !v : v && !(!x.gates[i])) as Payout["gates"] }))}
+                            onClick={() => setPayouts((all) => all.map((x) => x.id !== p.id ? x : { ...x, gates: x.gates.map((v, j) => j < i ? v : x.gates[i] ? false : j === i ? true : v) as Payout["gates"] }))}
                             className={`grid h-7 w-7 place-items-center rounded-full border transition disabled:opacity-30 ${g ? "border-transparent bg-brand-lime text-primary" : "border-border"}`}
                             aria-label={`Toggle ${gateNames[i]}`}
                           >{g && <Check className="h-4 w-4" />}</button>
@@ -166,7 +166,7 @@ function Portal() {
               </tbody>
             </table>
           </div>
-          <p className="mt-3 text-xs text-muted-foreground">Gates must clear in order. Unchecking a gate is allowed only when later gates are clear in real workflows — demo keeps it simple.</p>
+          <p className="mt-3 text-xs text-muted-foreground">Gates clear in order: Closed Won → Topo brand invoice paid → Ramp payout. Unchecking a gate resets later gates.</p>
         </TabsContent>
       </Tabs>
     </AppShell>
