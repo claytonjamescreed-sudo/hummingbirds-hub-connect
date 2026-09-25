@@ -34,7 +34,8 @@ const initialApps: App[] = [
   { id: 4, company: "Tidewater Media", contact: "Sam Ruiz", type: "Agency", audience: "Regional bev brands", status: "declined" },
 ];
 
-const reps = ["Jordan Blake", "Alexis Moreno", "Chris Patel"];
+const reps: string[] = ["Jordan Blake", "Alexis Moreno", "Chris Patel"];
+const repAt = (i: number) => reps[i % reps.length] as string;
 type Lead = { id: string; brand: string; contact: string; est: number; rep: string; dealId: string };
 type Payout = { id: string; brand: string; partner: string; amount: number; gates: [boolean, boolean, boolean] };
 
@@ -49,7 +50,7 @@ const gateNames = ["Closed Won", "Topo Brand Invoice Paid", "Ramp Payout"];
 function Portal() {
   const [apps, setApps] = useState(initialApps);
   const [leads, setLeads] = useState<Lead[]>([
-    { id: "L-1", brand: "Olipop", contact: "ops@olipop.com", est: 48000, rep: reps[0], dealId: "HS-88213" },
+    { id: "L-1", brand: "Olipop", contact: "ops@olipop.com", est: 48000, rep: repAt(0), dealId: "HS-88213" },
   ]);
   const [payouts, setPayouts] = useState(initialPayouts);
 
@@ -95,7 +96,7 @@ function Portal() {
 
         <TabsContent value="refer" className="mt-6 grid gap-6 lg:grid-cols-[380px_1fr]">
           <ReferForm onSubmit={(brand, contact, est) => {
-            const rep = reps[leads.length % reps.length];
+            const rep = repAt(leads.length);
             const dealId = `HS-${88213 + leads.length * 7}`;
             setLeads((p) => [{ id: `L-${p.length + 1}`, brand, contact, est, rep, dealId }, ...p]);
             toast.success(`HubSpot deal ${dealId} created`, { description: `Assigned via round-robin to ${rep}` });
@@ -113,7 +114,7 @@ function Portal() {
             </div>
             <div className="rounded-3xl border border-border bg-card p-6">
               <h2 className="font-display text-2xl">Submitted leads</h2>
-              <p className="text-sm text-muted-foreground">Next in rotation: <b>{reps[leads.length % reps.length]}</b></p>
+              <p className="text-sm text-muted-foreground">Next in rotation: <b>{repAt(leads.length)}</b></p>
               <div className="mt-4 divide-y divide-border">
                 {leads.map((l) => (
                   <div key={l.id} className="flex items-center gap-4 py-3 text-sm">
